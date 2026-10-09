@@ -160,6 +160,25 @@ Do not claim that checks passed unless they were actually executed.
 - Avoid unnecessary refactoring.
 - Explain important technical decisions.
 
+## Git Commit Messages
+
+- Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/): `<type>[optional scope][!]: <description>`.
+- Use lowercase types: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `style`, `build`, `ci`, `chore`, or `revert`.
+- Use `feat` for new functionality, `fix` for bug fixes, and `docs` for documentation-only changes. Choose the type by the change's purpose.
+- Scope is optional; when useful, use a short lowercase area name such as `tasks` or `ui`.
+- Write a concise English description in the imperative, without a trailing period. Describe the resulting change.
+- Reserve `style` for formatting changes that do not affect behavior; visual UI changes are classified by their purpose, not automatically as `style`.
+- Mark breaking changes with `!` before the colon or a `BREAKING CHANGE:` footer describing the compatibility impact.
+- Keep each commit focused on a coherent change, including its related documentation. Review the staged diff and complete applicable checks before committing.
+
+Examples:
+
+```text
+feat(tasks): add status filtering with Mantine
+fix(tasks): restore all tasks when clearing the filter
+docs: document commit conventions
+```
+
 ## Repository Expectations
 
 Before making changes:

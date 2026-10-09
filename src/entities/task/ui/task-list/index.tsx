@@ -1,5 +1,5 @@
-import { TaskStatus, type Task } from '../model/types'
-import styles from './TaskList.module.scss'
+import { TaskStatus, type Task } from '../../model/types'
+import styles from './index.module.scss'
 
 interface TaskListProps {
   readonly tasks: readonly Task[]

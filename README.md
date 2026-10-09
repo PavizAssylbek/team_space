@@ -1,6 +1,6 @@
 # team_space
 
-Минимальный frontend Teamspace на React, TypeScript и Vite.
+Минимальный frontend Teamspace на React, TypeScript и Vite с готовым UI на Mantine.
 
 ## Требования
 
@@ -56,24 +56,26 @@ pnpm preview
 src/
 ├── main.tsx                  # Подключение React к DOM
 ├── app/
-│   ├── App.tsx               # Композиция приложения
-│   └── App.module.scss       # Явные глобальные базовые стили
+│   ├── index.tsx             # MantineProvider и композиция приложения
+│   └── index.module.scss     # Явные глобальные базовые стили
 ├── pages/
 │   └── home/
 │       ├── index.ts          # Публичный API страницы
 │       ├── model/
 │       │   └── demo-tasks.ts # Демонстрационные данные страницы
 │       └── ui/
-│           ├── HomePage.tsx  # Стартовая страница
-│           └── HomePage.module.scss
+│           └── home-page/
+│               ├── index.tsx # Стартовая страница
+│               └── index.module.scss
 └── entities/
     └── task/
         ├── index.ts          # Публичный API сущности
         ├── model/
         │   └── types.ts      # interface Task и enum TaskStatus
         └── ui/
-            ├── TaskList.tsx  # Список через props и пустое состояние
-            └── TaskList.module.scss
+            └── task-list/
+                ├── index.tsx # Список через props и пустое состояние
+                └── index.module.scss
 ```
 
 Слои FSD добавляются по мере появления функциональности. Направление импортов:
@@ -81,14 +83,39 @@ src/
 `TaskList` отвечает за отображение сущности, не загружает данные и не меняет
 полученный массив. Данные принадлежат странице; API и фильтрации пока нет.
 
+## UI на Mantine
+
+Установлены `@mantine/core` и `@mantine/hooks` версии `9.7.1`. Все зависимости
+устанавливаются обычной командой `pnpm install`.
+
+В `src/app/index.tsx` один `MantineProvider` включает светлую тему; там же подключён
+`@mantine/core/styles.layer.css`. Стили библиотеки находятся в CSS-слое `mantine`,
+поэтому собственные SCSS Modules могут переопределять их. Заголовки страницы
+используют готовый `Title` с сохранением семантики `h1` / `h2`.
+
+Для стандартных элементов используем компоненты Mantine. Дополнительные обёртки
+создаём при конкретной необходимости. PostCSS-пресет для текущего подключения
+готовых стилей и обычных SCSS Modules не требуется; специальные миксины из примеров
+Mantine пока не используются. Фильтрация остаётся отдельной задачей.
+
+Документация: [подключение с Vite](https://mantine.dev/guides/vite/),
+[стили Mantine](https://mantine.dev/styles/mantine-styles/).
+
 ## Соглашения
 
 - Объектные контракты и props описываем через `interface`, именованные конечные
   наборы доменных значений — через строковый `enum`. Алиасы `type` используем,
   только когда эти конструкции не подходят. `import type` и `export type`
   остаются корректным способом импортировать и экспортировать интерфейсы.
-- Компонентные стили — `<Component>.module.scss`; локальные классы доступны через
-  `styles`. Только базовые правила `:root` и `body` в `App.module.scss` явно глобальны.
+- Файлы и папки исходников — kebab-case, например `task-list`; имена компонентов,
+  интерфейсов и enum остаются PascalCase. Канонические документы (`AGENTS.md`,
+  `README.md`, `PROGRESS.md`, `ROADMAP.md`) сохраняют стандартные имена.
+- В сегменте `ui` каждый компонент находится в собственной папке:
+  `ui/task-list/index.tsx` и `index.module.scss`. Если в папке несколько связанных
+  UI-компонентов, используем описательные имена `task-list-item.tsx` /
+  `task-list-item.module.scss` и публичный `index.ts`.
+- Локальные классы SCSS Modules доступны через `styles`. Только базовые правила
+  `:root` и `body` в `app/index.module.scss` явно глобальны.
   Для компиляции SCSS установлен Sass как devDependency.
 - Алиас `@/` указывает на `src` и настроен в TypeScript и Vite. Между слайсами
   используем публичный API, например `@/entities/task`; внутри слайса разрешены

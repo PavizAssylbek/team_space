@@ -17,6 +17,7 @@ The project primarily uses:
 - React
 - TypeScript
 - Feature-Sliced Design (FSD)
+- Mantine (`@mantine/core` and `@mantine/hooks`) for ready-made UI components
 
 Additional technologies and libraries will be introduced as needed.
 
@@ -70,8 +71,10 @@ Architecture decisions may evolve as the project grows.
 - Prefer string `enum` for finite named sets of domain values such as task statuses.
 - Use a `type` alias only when `interface` or `enum` cannot express the required type, such as unions, intersections, mapped, or conditional types. Explain the reason for the exception.
 - Type-only imports and exports (`import type` / `export type`) are encouraged; they are not type aliases.
-- Use SCSS Modules named `<Component>.module.scss` for component styles and access local classes through the imported `styles` object.
-- Keep intentional application-wide base/reset styles in `app/App.module.scss` with explicit `:global` selectors. Keep component selectors local.
+- Use SCSS Modules named `index.module.scss` or `<component-name>.module.scss` for component styles and access local classes through the imported `styles` object.
+- Prefer installed Mantine components for standard UI elements. Create custom primitives or wrappers only when the task requires them.
+- Import Mantine's published `@mantine/core/styles.layer.css` once in the app entry. Vendor CSS is an intentional exception to the project's SCSS Module file convention; project component styles remain local SCSS Modules.
+- Keep intentional application-wide base/reset styles in `app/index.module.scss` with explicit `:global` selectors. Keep component selectors local.
 - Use the `@/` alias for imports from `src`, especially between FSD slices; continue using each slice's public API.
 - Relative imports within a slice may use at most two parent-directory segments (`../../`). Use `@/` instead of deeper relative paths; the alias does not relax FSD dependency rules.
 - Follow existing naming conventions.
@@ -82,6 +85,27 @@ Architecture decisions may evolve as the project grows.
 - Remove unused imports, variables, and code.
 - Do not modify unrelated parts of the application.
 - Follow existing code style and formatting rules.
+
+### File Names and UI Component Structure
+
+- Use `kebab-case` for source file and directory names, for example `task-list`, `task-list-item.tsx`, and `task-list-item.module.scss`.
+- Keep React component, interface, and enum identifiers in PascalCase, for example `TaskList`, `Task`, and `TaskStatus`. Identifier casing does not determine file casing.
+- Preserve canonical documentation names such as `AGENTS.md`, `README.md`, `PROGRESS.md`, and `ROADMAP.md`, and filenames required by tools or existing integrations.
+- Within a slice's `ui` segment, give each component its own kebab-case directory. Do not place component implementations or their styles directly in `ui/`.
+- For a directory containing one component, prefer `index.tsx` and `index.module.scss`.
+- If a component directory contains several related UI components, use descriptive kebab-case filenames such as `task-list.tsx`, `task-list.module.scss`, `task-list-item.tsx`, and `task-list-item.module.scss`. Export the intended public component through that directory's `index.ts`.
+- Application entry/composition files may stay directly in `app/`, using kebab-case names such as `index.tsx` and `index.module.scss`.
+
+```text
+entities/task/
+├── index.ts
+├── model/
+│   └── types.ts
+└── ui/
+    └── task-list/
+        ├── index.tsx
+        └── index.module.scss
+```
 
 ## Actions Requiring Permission
 
